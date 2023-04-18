@@ -1,2 +1,1 @@
 sign[[:space:]]language[[:space:]]model/** filter=lfs diff=lfs merge=lfs -text
-Tesseract-OCR/** filter=lfs diff=lfs merge=lfs -text
