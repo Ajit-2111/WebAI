@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WEBAI</title>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='styles/index.css') }}">
+  </head>
+  <body>
+    <nav id="navbar" class="box-shadow">
+      <span class="logoDiv">
+        <img src="{{url_for('static', filename='websiteImg/artificial-intelligence.png')}}" alt="logo" height="50px" />
+      </span>
+      <div id="topRightNav">
+        <span class="header-search_form">
+          <input
+            class="form-control js-search-tools"
+            type="text"
+            placeholder="Search"
+            name="search_terms"
+          />
+          <button class="button" type="submit">
+            <img src="{{url_for('static', filename='websiteImg/search2.svg')}}" alt="" />
+          </button>
+        </span>
+
+        <button id="signIn">Sign In</button>
+      </div>
+    </nav>
+    <div class="blueDiv"></div>
+    <main>
+      <div id="svgBg">
+        <div class="heading-container">
+          <p>Free Tools to make</p>
+          <section class="animation">
+            <div class="first"><div>Your Life</div></div>
+            <div class="second"><div>Business</div></div>
+            <div class="third"><div>Everything</div></div>
+          </section>
+          <p>Easy.</p>
+        </div>
+        <div id="search-div">
+          <span class="search_form">
+            <input
+              class="js-search-tools"
+              type="text"
+              placeholder="Search"
+              name="search_terms"
+            />
+            <button class="button" type="submit">
+              <img src="{{url_for('static', filename='websiteImg/search-big.svg')}}" alt="" /></button
+            ><button id="searchBtn">Search</button>
+          </span>
+        </div>
+        <br /><br /><br />
+        <h1 class="heading">Our Most Popular Tools</h1>
+      </div>
+
+      <div id="tools-container">
+        <div class="tools_box" onclick="location.href = 'upload'">
+          <div>
+            <h4>Simple Prediction System</h4>
+            <span class="catalog-box__tag">Prediction Tools</span>
+          </div>
+          <p>Easily predict values by providing the dataset and selecting algorithms.</p>
+        </div>
+        <div class="tools_box" onclick="location.href = 'ocr'">
+          <div>
+            <h4>Image To Text</h4>
+            <span class="catalog-box__tag">Conversion Tools</span>
+          </div>
+          <p>Easily convert and find text in images using OCR.</p>
+        </div>
+        <div class="tools_box" onclick="location.href = 'speechtotext'">
+          <div>
+            <h4>Speech To Text</h4>
+            <span class="catalog-box__tag">Conversion Tools</span>
+          </div>
+          <p>Easily convert speech to text using speech recognition.</p>
+        </div>
+        <div class="tools_box" onclick="location.href = 'imageupscaler'">
+          <div>
+            <h4>Upscale your images</h4>
+            <span class="catalog-box__tag">Conversion Tools</span>
+          </div>
+          <p>Easily upscale your images without worrying about Pixelation .</p>
+        </div>
+        <div class="tools_box" onclick="location.href = 'signlangdetection'">
+          <div>
+            <h4>Sign Language Detection</h4>
+            <span class="catalog-box__tag">Conversion Tools</span>
+          </div>
+          <p>Easily understand sign language with just your camera .</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

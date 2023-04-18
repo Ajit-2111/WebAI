@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <link href="{{ url_for('static', filename='styles/index.css') }}" rel="stylesheet" type="text/css">
+    <title>WEB AI | Sign Language</title>
+
+</head>
+<body>
+<nav class="box-shadow" id="navbar">
+      <span class="logoDiv" onclick="window.location='/'">
+        <img alt="logo" height="50px" src="{{url_for('static', filename='websiteImg/artificial-intelligence.png')}}"/>
+      </span>
+    <div id="topRightNav">
+        <span class="header-search_form">
+          <input
+                  class="form-control js-search-tools"
+                  name="search_terms"
+                  placeholder="Search"
+                  type="text"
+          />
+          <button class="button" type="submit">
+            <img alt="" src="{{url_for('static', filename='websiteImg/search2.svg')}}"/>
+          </button>
+        </span>
+
+        <button id="signIn">Sign In</button>
+    </div>
+</nav>
+<div class="blueDiv"></div>
+
+<main>
+    <div class="text-center">
+        <h1 class="title_lg">Sign Language Detection</h1>
+        <p class="hd_p">Use this tool to understand sign language </p>
+    </div>
+    <br><br><br><br>
+    <div class="text-center">
+    <img src="{{ url_for('video_feed') }}">
+    <textarea class="optextarea" cols="50" rows="4"></textarea>
+    </div>
+
+
+</main>
+</body>
+    <script>
+        $(document).ready(function() {
+            // Function to fetch data from the server and update the page
+            function fetchData() {
+                $.ajax({
+                    url: "{{ url_for('video_feed_prediction') }}",
+                    type: 'GET',
+                    success: function(response) {
+                    console.log(response);
+                        let data = response;
+                       $('textarea').val(data);
+                    }
+                });
+            }
+
+            setInterval(fetchData, 1000);
+        });
+    </script>
+</html>

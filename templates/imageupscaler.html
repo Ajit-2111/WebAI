@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <link href="{{ url_for('static', filename='styles/index.css') }}" rel="stylesheet" type="text/css">
+    <title>WEB AI | Image Upscale</title>
+
+</head>
+<body>
+<nav class="box-shadow" id="navbar">
+      <span class="logoDiv" onclick="window.location='/'">
+        <img alt="logo" height="50px" src="{{url_for('static', filename='websiteImg/artificial-intelligence.png')}}"/>
+      </span>
+    <div id="topRightNav">
+        <span class="header-search_form">
+          <input
+                  class="form-control js-search-tools"
+                  name="search_terms"
+                  placeholder="Search"
+                  type="text"
+          />
+          <button class="button" type="submit">
+            <img alt="" src="{{url_for('static', filename='websiteImg/search2.svg')}}"/>
+          </button>
+        </span>
+
+        <button id="signIn">Sign In</button>
+    </div>
+</nav>
+<div class="blueDiv"></div>
+
+<main>
+    <div class="text-center">
+        <h1 class="title_lg">Image Upscaler</h1>
+        <p class="hd_p">Easily upscale your images without affecting their quality. </p>
+    </div>
+    <br><br><br><br>
+    <div class="text-center">
+        <div>
+            <label class="custom-file-upload">
+                <input aria-label="File browser example" id="file" name="file" type="file" onchange="loadFile(event)"/>
+                <img alt=""
+                     src="{{url_for('static', filename='websiteImg/file_upload.png')}}"
+                     style="width:20px;padding:0px 5px"/>Custom Upload
+            </label>
+            <label>
+              Upscale by :
+              <select class="upscaleBy" name="upscaleBy" id="imageupscalebyval" required>
+                <option value="">Select One …</option>
+                <option value="2x">2x</option>
+                <option value="3x">3x</option>
+                <option value="4x">4x</option>
+                  <option value="8x">8x</option>
+              </select>
+            </label>
+            <input class="button bluebtn" id="but_upload" type="button" value="Upload">
+            <span class="loadingfile" id="loadinggif">LOADING FILE ... <img
+                    src="./static/websiteImg/Double Ring Loading.gif"
+                    style="height:25px"/></span>
+        </div>
+        <br><br>
+
+        <div id="imgupscaleop">
+            <div id="image-size-text"></div>
+            <img src="" id="inpimg" >
+            <br>
+            <img src="" id="imgupscaledop" >
+        </div>
+    </div>
+</main>
+
+</body>
+<script>
+let loadFile = function(event) {
+	let image = document.getElementById('inpimg');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
+let upscalebyvalue = '';
+const selectElement = document.querySelector('.upscaleBy');
+
+selectElement.addEventListener('change', (event) => {
+upscalebyvalue = event.target.value;
+});
+document.querySelector("#loadinggif").style.display = 'none';
+ $("#but_upload").click(function() {
+                document.querySelector("#loadinggif").style.display = 'inline-block';
+                var fd = new FormData();
+                var files = $('#file')[0].files[0];
+                fd.append('file', files);
+                fd.append('upscaleBy',upscalebyvalue);
+
+                 $.ajax({
+                    url: 'imageupscaler',
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+
+                    success: function(response){
+                        if(response != 0){
+                        document.querySelector("#loadinggif").style.display = 'none';
+                           alert('file uploaded');
+                           console.log(response);
+                           document.querySelector('#imgupscaledop').src = response;
+
+
+                        }
+                        else{
+                            alert('file not uploaded');
+                        }
+                        setTimeout(imgSize, 500)
+                    },
+                });
+            });
+
+function imgSize(){
+        let uploadImg = document.querySelector("#inpimg");
+        let computedImg = document.querySelector("#imgupscaledop");
+        let uploadImgWidth = uploadImg.naturalWidth;
+        let uploadImgHeight = uploadImg.naturalHeight;
+        let computedImgWidth =computedImg.naturalWidth;
+        let computedImgHeight = computedImg.naturalHeight;
+        let imageSizeDiv = document.getElementById('image-size-text')
+        imageSizeDiv.innerHTML = `
+        <h3>Initial Image Height = ${uploadImgHeight}   Initial Image Width = ${uploadImgWidth} </h3>
+        <h3>Final Image Height = ${computedImgHeight}   Final Image Width = ${computedImgWidth} </h3>
+        `;
+    }
+
+</script>
+</html>

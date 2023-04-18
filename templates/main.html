@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+.dataframes {
+  height: 210px;
+   overflow-y: auto;
+   overflow-x: hidden;
+}
+
+#dfinfo{
+    width: 30rem;
+    background-color: #4E6E81 ;
+    color: white;
+}
+
+.dataframe {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+}
+
+.dataframe td, .dataframe th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.dataframe tr:nth-child(even){background-color: #f2f2f2;}
+
+.dataframe tr:hover {background-color: #ddd;}
+
+.dataframe th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4E6E81;
+  color: white;
+}
+
+#dfdescribe{
+    margin-top: 20px;
+}
+
+select{
+    border: none;
+    background-color: #4E6E81;
+    padding: 12px;
+    color: white;
+    border-radius: 10px;
+}
+
+#columnselect{
+    margin-top: 20px;
+}
+
+ label{
+
+    font-size: 30px;
+
+}
+
+input[type=submit] {
+    background-color: #4E6E81;
+  border: none;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 2px 0px 2px black;
+}
+
+#feature{
+    margin-top: 20px;
+}
+
+#target{
+    margin-top: 20px;
+}
+#plot{
+    margin-top: 20px;
+}
+
+#modelDetails{
+    width: 100%;
+}
+
+ img{
+    width: 100%;
+    height: 100%;
+}
+
+#predInput input{
+    padding: 12px;
+    border: 1px solid #4E6E81 ;
+    border-radius: 5px;
+}
+
+#predInput *{
+    margin-top: 20px;
+}
+#predOutput,#modelDetails p {
+    margin-top: 20px;
+    width: 100%;
+    background-color: tomato;
+    color: white;
+    padding: 10px;
+    font-size: 30px;
+}
+
+#predOutput {
+    display: none;
+}
+
+
+
+#dfinfo pre{
+    text-align: center;
+    font-size: 15px;
+}
+
+table {
+overflow: auto;
+}
+<!--#dfcorr{-->
+<!--  overflow: auto;-->
+
+<!--}-->
+
+<!--#dfdescribe{-->
+<!--  overflow: auto;-->
+
+<!--}-->
+
+#modelDetails img{
+    width: 25%;
+
+}
+
+.navigationbar .btn{
+        position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+      }
+
+      h1{
+        text-align: center;
+
+        font-family: 'Times New Roman', Times, serif;
+
+        background-color:#326296 ;
+        color: white;
+        width: 25rem;
+        border: none solid;
+        border-radius: 0 0 10px;
+        margin-top: 20px;
+      }
+.encodecolnamediv {
+  display:none;
+}
+
+.encodevisible {
+  display: block;
+}
+
+img {
+    display: block;
+    width: 100% !important;
+    height: 100%;
+}
+    </style>
+     <link rel="icon" href="https://image.shutterstock.com/image-vector/analysis-iconvector-illustrationmagnify-bar-chart-260nw-1499692568.jpg" type="image/x-icon"/>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='styles/index.css') }}">
+
+</head>
+<body>
+<nav id="navbar" class="box-shadow">
+      <span class="logoDiv" onclick="window.location='/'">
+        <img src="{{url_for('static', filename='websiteImg/artificial-intelligence.png')}}" alt="logo" style="width:50px !important"/>
+      </span>
+    <div id="topRightNav">
+        <span class="header-search_form">
+          <input
+                  class="form-control js-search-tools"
+                  type="text"
+                  placeholder="Search"
+                  name="search_terms"
+          />
+          <button class="button" type="submit">
+            <img src="{{url_for('static', filename='websiteImg/search2.svg')}}" alt=""/>
+          </button>
+        </span>
+
+        <button id="signIn">Sign In</button>
+    </div>
+</nav>
+<div class="blueDiv"></div>
+<br>
+  <h1>Database Information</h1>
+<div id = 'dfinfo'></div>
+
+<div id = 'dfcorr'></div>
+
+<div id = 'dfdescribe'></div>
+
+<div id="encoder"></div>
+
+<div id = 'columnselect'></div>
+
+<div id="feature" class="dataframes"></div>
+
+<div id="target" class="dataframes"></div>
+
+<div id="plot"></div>
+
+<div id="algoselect"></div>
+
+<div id="modelDetails"></div>
+
+<div id="predInput"></div>
+
+
+<div id="predOutput"></div>
+</body>
+<script>
+let columns;
+let featurecol;
+let targetcol;
+
+function encodethiscol() {
+  let elemidname = event.target.id.slice(6, event.target.id.length);
+  document.querySelector(`#${elemidname}`).classList.toggle("encodevisible");
+}
+
+
+function submitencodemapping(parentname) {
+console.log(parentname)
+let parentdivname = document.querySelector(`#${parentname}`)
+let parentslabelelem = parentdivname.querySelectorAll('label')
+let parentsinputelem = parentdivname.querySelectorAll('input')
+let mappedData = {}
+mappedData['columnname'] = parentname.slice(6,);
+for (let i = 0; i < parentslabelelem.length; i++) {
+mappedData[parentslabelelem[i].innerHTML] = parentsinputelem[i].value;
+}
+$.ajax({
+        type: "POST",
+        url: "/encodedatacol",
+        contentType: "application/json",
+        data: JSON.stringify(mappedData),
+        dataType: 'json',
+        success: function(result) {
+            alert(`Mapped Data \n ${JSON.stringify(mappedData)}`);
+        }
+    });
+}
+
+
+
+
+// This send request to get datasets info, corr and describe details
+$.ajax({
+    type: "GET",  // THE HTTP METHOD
+    url: "/info",  // THE REQUESTED URL
+    contentType: "application/json",
+    dataType: 'json',	// THE DATA-TYPE FOR SENDING DATA
+    // SUCCESS RUNS THE CODE WHEN THE RESPONSE FROM THE SERVER IS RECIEVED.
+    success: function(result) {
+        document.querySelector("#dfinfo").innerHTML =  result['info'];
+        document.querySelector("#dfcorr").innerHTML ="<h1> Dataset Correspondence </h1>"+ result['corr'];
+        document.querySelector("#dfdescribe").innerHTML = "<h1> Dataset Description </h1>"+result['describe'];
+<!--        let data = {-->
+<!--  height: ["short", "medium", "high"],-->
+<!--  weight: ["low", "medium", "high"],-->
+<!--  age: ["young", "middle", "old"]-->
+<!--};-->
+<!--let colnames = ["height", "weight", "age"];-->
+let data = result['categoricalcolnames']
+let txt = ``;
+for (let i in data) {
+  txt += `<h1 class= 'encodecolnametitle' id =toggleencode${i} onclick=encodethiscol()>${i}</h1><div id = 'encode${i}' class='encodecolnamediv'> `;
+  for (let j of data[i]) {
+    txt += `<label for=${i+j}>${j}</label>
+              <input type="number" id='${i+j}'> </br>
+              `;
+  }
+  txt += `<button onclick= submitencodemapping(this.parentNode.id)>Submit</button></div>`;
+}
+
+document.querySelector("#encoder").innerHTML = txt;
+    }
+});
+
+// CREATES THE COLUMNS WITH DROPDOWN OPTIONS
+$.ajax({
+    type: "GET",
+    url: "/columns",
+    contentType: "application/json",
+    dataType: 'json',
+    success: function(result) {
+        columns = result;
+        console.log(columns);
+        let columnoption = '';
+        for (column in columns) {
+            let option = `
+            <label for=${columns[column]}>Choose a option for ${columns[column]} :</label>
+            <select name=${columns[column]} id=${columns[column]}>
+            <option value="feature">Feature</option>
+            <option value="target">Target</option>
+            <option value="drop">Drop</option>
+            </select>
+            </br></br>`;
+            columnoption += option;
+        }
+        columnoption += `<input type='submit' value='submit' id = 'colvalues' onclick="columnvalues();"></input>`
+        document.querySelector("#columnselect").innerHTML = "<h1> Column Selection</h1>"+columnoption;
+    }
+});
+
+
+// COLLECTS THE COLUMN VALUES FROM DROPDOWN ( FEATURE, TARGET AND DROP) AND SENDS IT TO THE SERVER.
+function columnvalues() {
+
+    let colvalue = {
+        'feature': [],
+        'target': [],
+        'drop': []
+    };
+    let select = document.querySelectorAll('#columnselect select');
+    for (elem of select) {
+        if (elem.value == 'feature') {
+            colvalue['feature'].push(elem.id)
+        } else if (elem.value == 'target') {
+            colvalue['target'].push(elem.id)
+        } else {
+            colvalue['drop'].push(elem.id)
+        }
+    }
+    targetcol = colvalue['target'];
+    featurecol = colvalue['feature'];
+    console.log('Before  Ajax');
+    $.ajax({
+        type: "POST",
+        url: "/colvalues",
+        contentType: "application/json",
+        data: JSON.stringify(colvalue),
+        dataType: 'json',
+        success: function(result) {
+            document.querySelector('#feature').innerHTML = "<h1>Features</h1>"+result['X'];
+            document.querySelector('#target').innerHTML = "<h1>Target</h1>"+result['Y']
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: '/pairplot',
+                success: function(result) {
+                    console.log(result.slice(1, result.length));
+                    document.querySelector('#plot').innerHTML = "<h1>Graphs</h1>"+`<img src=${result.slice(1,result.length)} alt='Pair Plot'/>`;
+                    algoOption();
+                }
+            });
+        }
+    });
+}
+
+
+// CREATES THE DROPDOWN TO SELECT ALGORITHM
+function algoOption() {
+    let algoselect = document.querySelector('#algoselect').innerHTML ="<h1>Algorithm Selection</h1>"+ `
+      <label for="algo">Choose a Algorithm: </label>
+      <select name="algo" id="algo">
+        <option value="linearReg">Linear Regression</option>
+        <option value="decisionTree">Decision Tree</option>
+        <option value="naiveBayes">Naive Bayes</option>
+      </select>
+      <br><br>
+      <input type="submit" value="Submit" onclick="createModel()">`;
+}
+
+
+// SEND REQUEST TO CREATE AND GET THE MODEL OF SELECTED ALGORITHM
+function createModel() {
+    algorithm = document.querySelector('#algo').value;
+    console.log(algorithm)
+    if (algorithm == "linearReg") {
+        console.log('Inside Linear reg')
+        $.ajax({
+            type: "GET",
+            url: "/linearRegression",
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result) {
+                let img = ''
+                for (graph of result['regLine']) {
+                    console.log(graph)
+                    img += `<img src = ${graph.slice(1,graph.length)} alt='Regression Line'>`
+                }
+                document.querySelector("#modelDetails").innerHTML = "<h1>Model Details</h1>"+`
+                    <p><span class='modelprop'>Intercept : </span><span class='modelpropvalue'>${result['intercept']}</span></p>
+                    <p><span class='modelprop'>Coefficient : </span><span class='modelpropvalue'>${result['coefficient']}</span></p>
+                    <p><span class='modelprop'>Mean Absolute Error : </span><span class='modelpropvalue'>${result['mae']}</span></p>
+                    <p><span class='modelprop'>Mean Absolute Percentage Error : </span><span class='modelpropvalue'>${result['mape']}</span></p>
+                    <p><span class='modelprop'>R2 : </span><span class='modelpropvalue'>${result['r2']}</span></p>${img}
+                    <img src = ${result['accuracygraphFilename'].slice(1,result['accuracygraphFilename'].length)} alt='Predicted Graph'>
+                    <button><a href=${result['modelfilename'].slice(1,result['modelfilename'].length)} download > Download Model</a></button>`
+                createpredinput();
+            }
+        });
+    } else if (algorithm == "decisionTree") {
+        $.ajax({
+            type: "GET",
+            url: "/decisionTree",
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result) {
+                console.log(result);
+                document.querySelector("#modelDetails").innerHTML = `
+                <p><span class='modelprop'>Score : </span><span class='modelpropvalue'>${result['score']}</span></p>
+                <img src = ${result['treeGraphName'].slice(1,result['treeGraphName'].length)} alt='Decision Tree'>
+                <img src = ${result['accuracygraphFilename'].slice(1,result['accuracygraphFilename'].length)} alt='Predicted Graph'>
+                <button><a href=${result['modelfilename'].slice(1,result['modelfilename'].length)} download > Download Model</a></button>
+                `;
+                createpredinput();
+            }
+        });
+    }
+
+    else if (algorithm == "naiveBayes") {
+        $.ajax({
+            type: "GET",
+            url: "/naiveBayes",
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result) {
+                console.log(result);
+                document.querySelector("#modelDetails").innerHTML = "<h1>Model Details</h1>"+`
+                    <p><span class='modelprop'>Mean Absolute Error : </span><span class='modelpropvalue'>${result['mae']}</span></p>
+                    <p><span class='modelprop'>Mean Absolute Percentage Error : </span><span class='modelpropvalue'>${result['mape']}</span></p>
+                    <p><span class='modelprop'>R2 : </span><span class='modelpropvalue'>${result['r2']}</span></p>
+                    <img src = ${result['accuracygraphFilename'].slice(1,result['accuracygraphFilename'].length)} alt='Predicted Graph'>
+                    <button><a href=${result['modelfilename'].slice(1,result['modelfilename'].length)} download > Download Model</a></button>`
+                createpredinput();
+            }
+        });
+    }
+}
+
+
+
+function createpredinput() {
+    predinp = '';
+    for (colname of featurecol) {
+        predinp += `
+    <label for=pred${colname}>${colname} : </label>
+    <input type="text" id=pred${colname}  placeholder = "Enter some value"><br/>`
+    }
+    predinp += '<input type="submit" value="Submit" onclick="prediction()">'
+    document.querySelector("#predInput").innerHTML = "<h1>Inputs to Predict</h1>"+predinp;
+}
+
+
+function prediction()
+{
+    document.getElementById("predOutput").style.display="block";
+    predinpdata = {}
+    for (inp of featurecol) {
+        predinpdata[inp] = document.querySelector(`#pred${inp}`).value
+    }
+    console.log(predinpdata);
+    $.ajax({
+        type: "POST",
+        url: "/predictdata",
+        contentType: "application/json",
+        data: JSON.stringify(predinpdata),
+        dataType: 'json',
+        success: function(result) {
+            console.log(result);
+            document.querySelector(`#predOutput`).innerHTML = "<h1>Output</h1>"+`
+         <p><span class='predtarget'>${targetcol[0]} : </span><span class='predvalue'>${result}</span></p>
+         `;
+        }
+    });
+
+}
+
+</script>
+</html>
