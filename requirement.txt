@@ -26,3 +26,4 @@ wavinfo==2.1.0
 wavio==0.0.7
 wheel==0.36.2
 zipp==3.12.0
+gunicorn==19.7.1
